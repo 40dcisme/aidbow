@@ -1,0 +1,7 @@
+[project]
+name = "aidbow-adapters"
+version = "0.1.0"
+description = "Aidbow Creative OS - pluggable adapters (LLM provider / retrieval / context sources)"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = ["aidbow-core"]

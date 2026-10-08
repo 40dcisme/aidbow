@@ -1,0 +1,7 @@
+[project]
+name = "aidbow-context"
+version = "0.1.0"
+description = "Aidbow Creative OS - context providers (text/link/file, pluggable)"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = ["aidbow-core"]
