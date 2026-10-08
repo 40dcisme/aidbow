@@ -1,0 +1,6 @@
+[project]
+name = "aidbow-prompts"
+version = "0.1.0"
+description = "Aidbow Creative OS - base prompt pack (anti-hallucination)"
+requires-python = ">=3.9"
+license = { text = "MIT" }
