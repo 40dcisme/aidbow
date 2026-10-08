@@ -16,13 +16,14 @@ class BaseHarness:
     传入 `stages=[(key, step), ...]` 或 `overrides={key: step}` 可替换任意步骤（闭源精炼层用）。
     """
     def __init__(self, evaluator=None, context=None, llm=None, logger=None,
-                 overrides: dict | None = None, stages: list | None = None):
+                 summarizer=None, overrides: dict | None = None, stages: list | None = None):
         from .steps import DemandStep, BrainstormStep, OverviewStep, WorkflowStep
         defaults = {"demand": DemandStep(), "brainstorm": BrainstormStep(),
                     "overview": OverviewStep(), "workflow": WorkflowStep()}
         defaults.update(overrides or {})
         self.stages = [(_k, _v) for _k, _v in (stages or defaults.items())]
-        self.ctx_kwargs = dict(evaluator=evaluator, context=context, llm=llm, logger=logger)
+        self.ctx_kwargs = dict(evaluator=evaluator, context=context, llm=llm, logger=logger,
+                               summarizer=summarizer)
 
     def run(self, demand, ctx=None):
         from aidbow_core import HarnessContext

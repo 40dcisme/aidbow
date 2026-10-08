@@ -43,3 +43,17 @@ class Harness(Protocol):
     """§2.2 编排。"""
     stages: list[Any]
     def run(self, demand: Demand, ctx: HarnessContext) -> Any: ...
+
+
+@runtime_checkable
+class LLMAdapter(Protocol):
+    """LLM 适配器（O 环节 LLM 路径用）。"""
+    id: str
+    def generate(self, prompt: str, **kwargs) -> str: ...
+
+
+@runtime_checkable
+class AgentAdapter(Protocol):
+    """Agent 适配器（O 环节 Agent 路径：把整包上下文交给另一个 Agent 读）。"""
+    id: str
+    def review(self, ideas: list[Idea], demand: Demand, **kwargs) -> dict: ...

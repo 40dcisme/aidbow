@@ -133,6 +133,38 @@ interface PromptPack {
 ```
 > **覆盖机制**：解析顺序 `项目覆盖目录 → 基础包`（同名覆盖）。闭源把精炼提示词放覆盖目录，不改开源默认包。
 
+
+## 2.5 Overview 自动化（人审 / LLM / Agent 三路径）
+
+O（汇总收敛）环节默认由**人**完成（在 review-ui 勾选取舍）。当**人不便参与**时，框架提供两条**等价自动化路径**，产出**同一 `OverviewResult`**：
+
+```ts
+type OverviewResult = {
+  demandId: string;
+  method: "human" | "llm" | "agent";
+  clusters: { label: string; idea_ids: string[]; note?: string }[];
+  conflicts: { term: string; statements: { idea_id: string; claim: string }[] }[];
+  shortlist: { idea_id: string; why: string }[];
+  open_questions: string[];
+  warnings: string[];
+  provenance: Record<string, string>;   // {model? / agent? / prompt_pack?}
+};
+
+// LLM 路径：把创意集 + 提示词模板交给 LLM
+interface LLMAdapter { id: string; generate(prompt: string, **kw): string; }
+
+// Agent 路径：把整包上下文交给另一个 Agent 读
+interface AgentAdapter { id: string; review(ideas: Idea[], demand: Demand, **kw): dict; }
+```
+
+**约束（抗幻觉，两条路径均适用）**：
+1. 只归纳创意中**实际出现**的内容，**不得编造**；
+2. 每条结论**必须带 `idea_id` 溯源**；
+3. 同一跨域术语出现冲突理解 → **显式记入 `conflicts`**，交人裁定，不自动合并；
+4. 失败（如 LLM 未返回可解析 JSON）→ 记 `warnings`，**不静默编造**。
+
+**接线**：`BaseHarness(summarizer=...)`；人类路径则用 `review-ui` 导出 `Decision`。
+
 ## 3. 覆盖 / 扩展机制（**不 fork**）
 
 | 扩展点 | 开源提供 | 闭源覆盖方式 |

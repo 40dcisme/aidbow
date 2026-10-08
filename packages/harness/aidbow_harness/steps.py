@@ -37,8 +37,16 @@ class OverviewStep:
         agg = None
         if ctx.evaluator and ideas:
             agg = ctx.evaluator.aggregate(ideas)
+        # 注入 summarizer → 自动产出 OverviewResult（LLM 或 Agent 路径）
+        overview = None
+        sm = getattr(ctx, "summarizer", None)
+        if sm is not None and ideas:
+            try:
+                overview = sm.summarize(ideas, input.get("demand"))
+            except Exception as e:            # 不编造：失败则显式记录
+                overview = {"error": str(e), "method": getattr(sm, "id", "summarizer")}
         return {"demand": input.get("demand"), "ideas": ideas, "aggregate": agg,
-                "overview": {"clusters": [], "conflicts": [], "note": "由使用者注入汇总逻辑"}}
+                "overview": overview}
 
 
 class WorkflowStep:

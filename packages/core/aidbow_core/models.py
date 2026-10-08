@@ -99,3 +99,31 @@ class HarnessContext:
     context: Any = None
     llm: Any = None
     logger: Any = None
+    summarizer: Any = None      # Overview 自动化（LLM/Agent 路径）
+
+
+# ---------------- Overview 阶段性结果（自动化收敛用） ----------------
+@dataclass
+class OverviewCluster(_Ser):
+    label: str
+    idea_ids: list[str] = field(default_factory=list)
+    note: str = ""
+
+
+@dataclass
+class OverviewConflict(_Ser):
+    term: str
+    statements: list[dict] = field(default_factory=list)   # [{idea_id, claim}]
+
+
+@dataclass
+class OverviewResult(_Ser):
+    """O 环节产物。method: human | llm | agent（三条路径同一结构）。"""
+    demandId: str
+    method: str = "human"
+    clusters: list[OverviewCluster] = field(default_factory=list)
+    conflicts: list[OverviewConflict] = field(default_factory=list)
+    shortlist: list[dict] = field(default_factory=list)    # [{idea_id, why}]
+    open_questions: list[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    provenance: dict = field(default_factory=dict)         # {model?, agent?, prompt_pack?, generated_at}
