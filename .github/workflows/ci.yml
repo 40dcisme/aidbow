@@ -9,3 +9,9 @@ jobs:
         with: { python-version: "3.11" }
       - name: Run all tests (zero-dep)
         run: python3 run_all_tests.py
+      - name: Smoke - end-to-end demo
+        run: python3 examples/run_demo.py
+      - name: Smoke - P-system demo
+        run: python3 examples/run_pdemo.py
+      - name: Environment self-check
+        run: python3 scripts/check_env.py

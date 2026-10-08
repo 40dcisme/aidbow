@@ -20,9 +20,15 @@ Modern agents converge, hallucinate and misread cross-domain context. Aidbow str
 | `@aidbow/adapters` | LLM / retrieval adapters |
 
 ## Quick start
+> **New here? → [QUICKSTART (5-minute, zero-config run)](docs/QUICKSTART.md)**
+
 ```bash
-python3 run_all_tests.py          # zero-dependency test runner
+git clone --depth 1 https://github.com/40dcisme/aidbow.git && cd aidbow
+python3 examples/run_demo.py      # end-to-end DBOW demo → ends with: ✅ DEMO OK
+python3 run_all_tests.py          # all package tests   → ends with: ✅ ALL GREEN
+python3 scripts/check_env.py      # environment check   → ends with: ✅ READY
 ```
+No third-party dependencies, no network, no API key required.
 ```python
 import sys; [sys.path.insert(0, f"packages/{p}") for p in ["core","p-system","prompts","harness"]]
 from aidbow_core import Demand, Idea
