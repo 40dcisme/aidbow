@@ -1,0 +1,28 @@
+name: Auto PR
+# 机制修复：Agent(CRON) 无本地 GitHub token，故由 GitHub 自己在 push 分支时开 PR。
+on:
+  push:
+    branches: ['feat/**', 'fix/**']
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Open PR if none exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          BR="${{ github.ref_name }}"
+          if gh pr list --head "$BR" --state open --json number --jq '.[].number' | grep -q .; then
+            echo "PR already open for $BR"; exit 0
+          fi
+          gh pr create --base main --head "$BR" \
+            --title "feat: $BR" \
+            --body "自动为分支 \`$BR\` 创建 PR。
+
+投稿人：请在下方补充「改了什么 / 为何 / 测试结果」。
+维护者：CI 绿 + 契约对齐后合并。"
