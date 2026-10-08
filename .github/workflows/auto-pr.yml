@@ -2,7 +2,7 @@ name: Auto PR
 # 机制修复：Agent(CRON) 无本地 GitHub token，故由 GitHub 自己在 push 分支时开 PR。
 on:
   push:
-    branches: ['feat/**', 'fix/**']
+    branches: ['feat/**', 'fix/**', 'chore/**']
 permissions:
   contents: read
   pull-requests: write
@@ -15,14 +15,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -e
-          BR="${{ github.ref_name }}"
-          if gh pr list --head "$BR" --state open --json number --jq '.[].number' | grep -q .; then
-            echo "PR already open for $BR"; exit 0
+          set -x
+          BR="${GITHUB_REF_NAME}"
+          echo "repo=${GITHUB_REPOSITORY} branch=$BR token_set=$([ -n "$GH_TOKEN" ] && echo yes || echo no)"
+          existing=$(gh pr list --head "$BR" --state open --json number --jq '.[].number' || true)
+          if [ -n "$existing" ]; then echo "PR already open: $existing"; exit 0; fi
+          if ! gh pr create --base main --head "$BR" --title "PR: $BR" --body "Automated PR for branch $BR."; then
+            echo "::error::gh pr create failed (see above). Likely cause: Settings > Actions > General > 'Allow GitHub Actions to create and approve pull requests' is OFF, or workflow permissions are read-only."
+            exit 1
           fi
-          gh pr create --base main --head "$BR" \
-            --title "feat: $BR" \
-            --body "自动为分支 \`$BR\` 创建 PR。
-
-投稿人：请在下方补充「改了什么 / 为何 / 测试结果」。
-维护者：CI 绿 + 契约对齐后合并。"
