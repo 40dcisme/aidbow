@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aidbow-review-ui"
+version = "0.1.0"
+description = "Offline, self-contained review console for SPEC §1 Ideas — check, prioritize, note and export Decisions."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Aidbow contributors" }]
+keywords = ["review", "ideas", "decision", "static-site", "offline"]
+dependencies = []
+
+[project.scripts]
+aidbow-review-ui = "aidbow_review_ui.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["aidbow_review_ui*"]
+
+[tool.setuptools.package-data]
+aidbow_review_ui = ["static/*.html", "static/*.js"]

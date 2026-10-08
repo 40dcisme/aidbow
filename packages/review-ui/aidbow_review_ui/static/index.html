@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ · 评审决策台</title>
+<style>
+:root{--bg:#0b1220;--panel:#121c2e;--panel2:#0f1829;--line:#22304a;--ink:#e9eef7;--dim:#93a2bd;--faint:#7c8aa5;
+--acc:#14b8a6;--pick:#22c55e;--shadow:0 10px 30px -12px rgba(0,0,0,.6)}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:radial-gradient(1100px 600px at 12% -10%,#15233c,transparent 60%),var(--bg);color:var(--ink);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 20px 200px}
+h1{font-size:24px;margin:0 0 4px}h1 .a{background:linear-gradient(90deg,var(--acc),#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--dim);font-size:13px}
+.head{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-end;margin-bottom:14px}
+
+.bar{position:sticky;top:0;z-index:20;background:rgba(11,18,32,.92);backdrop-filter:blur(8px);border:1px solid var(--line);
+border-radius:14px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.bar label{color:var(--faint);font-size:12px}
+.bar select{background:#0d1526;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:12.5px}
+.chip-btn{border:1px solid var(--line);background:#0d1526;color:var(--dim);border-radius:99px;padding:5px 12px;font-size:12.5px;cursor:pointer}
+.chip-btn.on{background:rgba(20,184,166,.15);border-color:rgba(20,184,166,.5);color:#5eead4}
+.stat{margin-left:auto;font-size:13px;color:var(--dim)}
+.stat b{color:var(--pick);font-size:15px}
+
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;
+padding:15px 16px 13px;box-shadow:var(--shadow);margin-bottom:13px;border-left:4px solid transparent;transition:.15s}
+.card.picked{border-left-color:var(--pick);background:linear-gradient(180deg,#12271f,var(--panel2))}
+.card.dim{border-left-color:#334155;opacity:.8}
+.chead{display:flex;gap:12px;align-items:flex-start}
+.cb{width:21px;height:21px;margin-top:3px;accent-color:var(--pick);cursor:pointer;flex:none}
+.ttl{flex:1;min-width:0}
+.ttl .t{font-size:16px;font-weight:650;margin-bottom:3px}
+.ttl .one{color:#a8b7cf;font-size:13px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-size:11px;padding:2px 9px;border-radius:99px;border:1px solid var(--line);color:var(--dim);background:#0d1526}
+.tag.r1{border-color:rgba(148,163,184,.4)}
+.tag.r2{border-color:rgba(168,85,247,.45);color:#d8b4fe}
+.tag.lineage{border-color:rgba(245,158,11,.45);color:#fcd34d}
+.pvrow{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.pv{font-size:11px;font-family:"SFMono-Regular",Consolas,monospace;padding:2px 7px;border-radius:6px;background:#0d1526;color:#93a2bd;border:1px solid var(--line)}
+.pv.hi{color:#5eead4;border-color:rgba(20,184,166,.4)}
+.body{margin-top:11px;border-top:1px dashed var(--line);padding-top:9px}
+.body .txt{display:none;font-size:13px;color:#c3cfe2}
+.body.open .txt{display:block}
+.toggle{background:none;border:none;color:var(--acc);font-size:12.5px;cursor:pointer;padding:0}
+.pickrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:11px;border-top:1px solid var(--line);padding-top:10px}
+.pickrow select{background:#0d1526;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:12.5px}
+.note{flex:1;min-width:220px;background:#0d1526;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;resize:vertical;font-family:inherit}
+
+.export{position:fixed;left:0;right:0;bottom:0;background:rgba(11,18,32,.95);border-top:1px solid var(--line);padding:10px 20px;display:flex;gap:10px;align-items:center;justify-content:center;backdrop-filter:blur(8px);flex-wrap:wrap}
+.btn{background:linear-gradient(90deg,var(--acc),#0ea5e9);color:#04121a;border:none;border-radius:10px;padding:8px 18px;font-weight:650;font-size:13px;cursor:pointer}
+.btn.ghost{background:#0d1526;color:var(--ink);border:1px solid var(--line)}
+.hint{color:var(--faint);font-size:12px}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);max-width:860px;width:92%}
+dialog textarea{width:100%;height:380px;background:#0d1526;color:#c3cfe2;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:"SFMono-Regular",Consolas,monospace;font-size:12.5px}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+@media(max-width:640px){.wrap{padding:16px 12px 220px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div>
+      <h1>创意评审 <span class="a">决策台</span></h1>
+      <div class="sub">__TITLE__ · Demand <b>__DEMAND_ID__</b> · 共 <b id="nTotal">0</b> 条创意</div>
+    </div>
+    <div class="sub">勾选 → 定优先级 → 写备注 → 导出 Decision（Markdown / JSON）</div>
+  </div>
+
+  <div class="bar">
+    <div class="grp"><label>轮次</label>
+      <select id="fRound"><option value="">全部</option><option value="R1">R1</option><option value="R2">R2</option></select></div>
+    <div class="grp"><label>作者</label><select id="fAuthor"><option value="">全部</option></select></div>
+    <button class="chip-btn" id="fPicked">仅看已勾选</button>
+    <button class="chip-btn" id="fClear">清空勾选</button>
+    <div class="stat">已勾选 <b id="nPicked">0</b> / <span id="nTotal2">__N__</span> · 已备注 <span id="nNote">0</span></div>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<div class="export">
+  <span class="hint">决策实时保存到本机浏览器（刷新不丢）</span>
+  <button class="btn" id="doMd">预览 Markdown</button>
+  <button class="btn ghost" id="doJson">预览 JSON</button>
+  <button class="btn ghost" id="doDownloadMd">下载 .md</button>
+  <button class="btn ghost" id="doDownloadJson">下载 .json</button>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog">
+    <h3 id="dlgTitle" style="margin:0 0 10px">评审决策单</h3>
+    <textarea id="outText" readonly></textarea>
+    <div style="margin-top:10px;display:flex;gap:10px;align-items:center;justify-content:flex-end">
+      <span class="hint" id="copyState"></span>
+      <button type="button" class="btn ghost" id="doCopy">复制</button>
+      <button class="btn" value="close">关闭</button>
+    </div>
+  </form>
+</dialog>
+
+<script id="ideas-data" type="application/json">__DATA_JSON__</script>
+<script>
+/* 数据从内联 JSON 节点读取（避免 JSON 语法与 JS 模板字符串相互转义）。 */
+(function(){
+  var raw = document.getElementById("ideas-data").textContent;
+  window.__AIDBOW_IDEAS__ = JSON.parse(raw);
+  window.__AIDBOW_DEMAND_ID__ = "__DEMAND_ID__";
+})();
+</script>
+<script>__APP_JS__</script>
+</body>
+</html>
