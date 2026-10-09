@@ -13,5 +13,7 @@ jobs:
         run: python3 examples/run_demo.py
       - name: Smoke - P-system demo
         run: python3 examples/run_pdemo.py
+      - name: Smoke - review UI export
+        run: python3 examples/run_review.py -o /tmp/review_demo.html
       - name: Environment self-check
         run: python3 scripts/check_env.py

@@ -24,7 +24,7 @@ python3 scripts/check_env.py     # 预期最后一行：✅ READY
 python3 packages/core/run_tests.py packages/core/tests
 ```
 
-## 五、作为依赖安装后测试（高级）
+## 五、作为依赖安装后测试（**可选·进阶**，与「零安装」主线无关）
 ```bash
 pip install -e packages/core -e packages/p-system -e packages/prompts -e packages/harness
 python3 -c "import aidbow_core, aidbow_p_system, aidbow_prompts, aidbow_harness; print('imports OK')"
