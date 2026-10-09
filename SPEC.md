@@ -165,6 +165,13 @@ interface AgentAdapter { id: string; review(ideas: Idea[], demand: Demand, **kw)
 
 **接线**：`BaseHarness(summarizer=...)`；人类路径则用 `review-ui` 导出 `Decision`。
 
+### 2.6 接口单一真源（SSOT）与跨包集成（重要）
+- **接口定义以 `@aidbow/core` 为唯一真源**。其它包**必须复用** core 的协议，**不得另立同名契约**。
+  - 反例（已发生）：`@aidbow/adapters` 曾自造 `LLMAdapter.complete()`，与 core 的 `LLMAdapter.generate()` 方法名不一致，
+    导致实现**无法注入** harness（`BaseOverviewLLM` 调 `llm.generate` → `AttributeError`）——单包测试全绿却集成失败。
+- **合并前必须过「跨包集成测试」**：任何实现 `PEvaluator`/`LLMAdapter`/`ContextProvider`/`PromptPack`/`StepContract` 的包，
+  都要有一条**真注入**测试（把实现喂给对应消费者），而不仅是自身单测。见仓库 `tests/test_integration_cross_pkg.py`。
+
 ## 3. 覆盖 / 扩展机制（**不 fork**）
 
 | 扩展点 | 开源提供 | 闭源覆盖方式 |
