@@ -11,6 +11,9 @@
 python3 --version     # 需要 >= 3.9
 ```
 
+> ⚠️ **所有命令都在仓库根目录执行**；不要 `cd packages/*` 去跑包内脚本（会 `ModuleNotFoundError`）。
+> 需要从包目录跑只在开发时用，见 `docs/TESTS.md` §四。
+
 > 没有 Python？Ubuntu/Debian：`sudo apt-get install -y python3`；macOS：`brew install python`；Windows：到 python.org 下载安装。
 > **本项目只用标准库**，因此不需要 `pip install` 任何东西。
 
@@ -69,10 +72,13 @@ python3 scripts/check_env.py
 
 ## 5. 打开可视化评审台（可选，看创意全貌）
 
+用内置示例数据生成一个**自包含**评审页（浏览器可开，可勾选/定优先级/导出决策单）：
 ```bash
-python3 examples/run_review.py       # 用示例数据生成一个自包含 HTML
-# 然后在浏览器打开打印出的文件（review_demo.html）
+python3 examples/run_review.py
+# → 生成 review_demo.html，用浏览器打开它
 ```
+> 底层是 `@aidbow/review-ui` 包：`python3 -m aidbow_review_ui <ideas.json> -o out.html`
+> （命令行参数见包内 `README.md`）。**该步可选**，不影响前四条判定。
 
 ---
 
