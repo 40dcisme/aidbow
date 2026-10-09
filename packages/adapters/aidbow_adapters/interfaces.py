@@ -7,21 +7,17 @@ from __future__ import annotations
 from typing import Any, Protocol, runtime_checkable
 
 
-@runtime_checkable
-class LLMAdapter(Protocol):
-    """SPEC §2.2 `HarnessContext.llm` 注入点。
-
-    约定：
-    - `complete()` 是唯一必需方法：输入提示词，输出纯文本补全。
-    - 实现必须可通过 `HarnessContext(llm=...)` 注入给 harness 使用；
-      harness 步骤（如 brainstorm）在 `ctx.llm` 存在时调用它生成真实产出。
-    - 密钥等凭据一律从环境变量读取，**禁止硬编码**（AGENTS.md §5 红线）。
-    - 网络失败/未配置时抛出明确异常或返回显式错误标记，**不得编造内容**。
-    """
-    id: str
-    def complete(self, prompt: str, *, system: str | None = None,
-                 temperature: float = 0.7, max_tokens: int = 1024,
-                 **opts: Any) -> str: ...
+# ⚠️ LLMAdapter 契约以 @aidbow/core 为唯一真源（SSOT）。
+# 本包此前另立 `complete()` 契约，与 core 的 `generate()` 方法名不一致，
+# 导致实现**无法注入** harness（BaseOverviewLLM 调 llm.generate → AttributeError）。
+# 现直接复用 core 的协议，实现须提供 `generate(prompt, **kwargs)`。
+try:
+    from aidbow_core import LLMAdapter  # noqa: F401  (SSOT)
+except Exception:  # 无 core 时的等价兜底（保持方法名一致）
+    @runtime_checkable
+    class LLMAdapter(Protocol):
+        id: str
+        def generate(self, prompt: str, **kwargs: Any) -> str: ...
 
 
 @runtime_checkable

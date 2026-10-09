@@ -44,6 +44,10 @@ class OpenAICompatAdapter:
         self.timeout = timeout
 
     # ---- 主流程 ----
+    # —— SPEC/core 契约：generate() 委托 complete()（满足 HarnessContext.llm 注入）——
+    def generate(self, prompt: str, **kwargs: Any) -> str:
+        return self.complete(prompt, **kwargs)
+
     def complete(self, prompt: str, *, system: str | None = None,
                  temperature: float = 0.7, max_tokens: int = 1024,
                  **opts: Any) -> str:

@@ -18,6 +18,10 @@ class MockLLMAdapter:
         self.script = list(script or [])
         self.calls: list[dict[str, Any]] = []
 
+    # —— SPEC/core 契约：generate()（供 harness 的 LLM 路径调用）——
+    def generate(self, prompt: str, **kwargs: Any) -> str:
+        return self.complete(prompt, **kwargs)
+
     def complete(self, prompt: str, *, system: str | None = None,
                  temperature: float = 0.7, max_tokens: int = 1024,
                  **opts: Any) -> str:
