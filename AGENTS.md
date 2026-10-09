@@ -10,6 +10,10 @@ Binding rules for any AI/agent contributing code here.
 - All public types/interfaces MUST match [`SPEC.md`](SPEC.md) exactly (names, fields, signatures).
 - Implement `aidbow_core` protocols; never import a sibling package to reach its internals — depend **downward only** (`core` is the floor).
 
+## 2b. Interface SSOT & cross-package integration
+- Reuse `aidbow_core`'s protocols as the **single source of truth**; never redefine a same-named interface with a different shape.
+- Every implementation of a core protocol MUST ship a **cross-package integration test** that injects it into its real consumer (not only its own unit tests). Method-name drift (e.g. `complete` vs `generate`) passes unit tests but breaks integration.
+
 ## 3. No fabrication
 - Never invent data, scores or citations. Computed metrics (e.g. P3) must be reproducible; self-reported values must carry a `basis`.
 - If information is missing, emit an explicit `待补/unknown` marker — do not guess.
