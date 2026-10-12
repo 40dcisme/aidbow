@@ -22,3 +22,10 @@ def test_templates_contain_anti_hallucination():
     pk = BasePromptPack()
     assert "编造" in pk.get("synthesize")           # 汇总含抗幻觉
     assert "冲突" in pk.get("synthesize")           # 含跨专业冲突标记
+
+
+def test_select_prompt_present():
+    pk = BasePromptPack()
+    s = pk.get("select", {"ideas": "X"})
+    assert "选点官" in s and "P6" in s      # 优选提示词：角色 + 权重
+    assert "不产新创意" in s                 # 只选择，不产新
