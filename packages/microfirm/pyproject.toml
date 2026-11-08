@@ -1,0 +1,9 @@
+[project]
+name = "aidbow-microfirm"
+version = "0.1.0"
+description = "Aidbow Creative OS - Microfirm OS: 1 human + N agents minimal company shell (on-call roster / task kanban / daily ledger)"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+[tool.setuptools]
+packages = ["aidbow_microfirm"]

@@ -12,6 +12,7 @@
 | **Idea** | 一次产出的一条创意（含正文 + P 值卡），DBOW 的 B/O 单位 |
 | **Decision** | 人对一组 Idea 的取舍（选中/优先级/备注），驱动 W |
 | **Workflow Spec** | 由 Decision 生成、可交给执行器的工作流关键指令（DBOW 的 W） |
+| **Microfirm** | 一人公司运营层（`@aidbow/microfirm`）：1 个自然人 + N 个 Agent 的最小公司壳——值班编排 / 任务队列 / 日报留痕，DBOW 的 W 环节执行器扩展 |
 | **Package** | 一个可独立版本化的能力单元（`@aidbow/<name>`） |
 
 ## 1. 数据模型（语言无关，实现可用 JSON 序列化）
@@ -194,6 +195,7 @@ prompts  ──▶ (无依赖，纯文本)
 harness  ──▶ core + p-system + context + adapters (可选注入)
 core     ──▶ (无依赖，仅数据模型 + 编排接口)
 review-ui──▶ core(数据模型)
+microfirm──▶ core(数据模型)   # 一人公司运营层：值班编排/任务队列/日报留痕（W 环节执行器扩展）
 ```
 > 依赖只能**向下**；`core` 不依赖任何包（保证可独立使用）。
 
